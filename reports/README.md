@@ -194,7 +194,8 @@ From the [MLOps template](https://github.com/SkafteNicki/mlops_template)...
 >
 > Answer:
 
---- question 6 fill here ---
+We used ruff for linting and formatting with specific rule selections (E, F, I) covering error detection, flake8 rules and import sorting. Our ruff configuration enforces line lengths of 120 characters. These tools run automatically through pre-commit hooks defined in our `.pre-commit-config.yaml`
+
 
 ## Version control
 

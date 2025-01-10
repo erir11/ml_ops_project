@@ -28,5 +28,29 @@ dev = {file = ['requirements_dev.txt']}
 [tool.ruff]
 line-length = 120
 
+# Enable pycodestyle (E), pyflakes (F), isort (I)
+select = ["E", "F", "I"]
+ignore = []
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "I"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".git",
+    ".github",
+    ".pytest_cache",
+    "__pycache__",
+    "build",
+    "dist"
+]
+
+[tool.ruff.isort]
+known-first-party = ["ml_ops_project"]
+
+# Assume Python 3.11
+target-version = "py311"
+
 [tool.coverage.run]
 omit = ["tests/*"]
