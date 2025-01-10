@@ -49,8 +49,6 @@ exclude = [
 [tool.ruff.isort]
 known-first-party = ["ml_ops_project"]
 
-# Assume Python 3.11
-target-version = "py311"
 
 [tool.coverage.run]
 omit = ["tests/*"]
