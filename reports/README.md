@@ -54,9 +54,9 @@ will check the repositories and the code to verify your answers.
 * [x] Create the initial file structure using cookiecutter with an appropriate template (M6)
 * [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
 * [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
-* [ ] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
+* [x] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
     are using (M2+M6)
-* [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
+* [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
 * [ ] Do a bit of code typing and remember to document essential parts of your code (M7)
 * [ ] Setup version control for your data or part of your data (M8)
 * [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
@@ -118,7 +118,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 1 fill here ---
+57
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -163,7 +163,22 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 4 fill here ---
+We used conda for managing our dependencies, with pip handling additional Python packages. Our `environment.yaml` defines a structured environment with:
+- Core Python 3.11 installation
+- Package sources from conda-forge and defaults channels
+- Essential build tools (setuptools, pip)
+- Additional dependencies managed through requirements files
+
+To get a complete copy of our development environment, one would have to run the following commands:
+
+```bash
+# Create and activate conda environment from yaml specification
+conda env create -f environment.yaml
+conda activate ml_ops_project
+```
+
+This ensures all team members have identical development environments with the same package versions and development tools installed, with proper Python path configuration.
+
 
 ### Question 5
 
@@ -194,8 +209,16 @@ From the [MLOps template](https://github.com/SkafteNicki/mlops_template)...
 >
 > Answer:
 
-We used ruff for linting and formatting with specific rule selections (E, F, I) covering error detection, flake8 rules and import sorting. Our ruff configuration enforces line lengths of 120 characters. These tools run automatically through pre-commit hooks defined in our `.pre-commit-config.yaml`
+We used ruff for linting and formatting with specific rule selections (E, F, I) covering error detection, flake8 rules and import sorting. Our ruff configuration enforces line lengths of 120 characters (Which is a bit more than the standard pep8 recommendation). The linting rules enforced by ruff (including pycodestyle and isort) ensure consistent code style across the project, making it easier to review and maintain code. We added format checks to the github actions tests.yaml file like this
 
+```yaml
+      - name: Run format checks
+        run: |
+          ruff check .
+          ruff format --check .
+```
+
+ **ADD ABOUT DOCUMENTATION**
 
 ## Version control
 
