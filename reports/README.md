@@ -48,7 +48,7 @@ will check the repositories and the code to verify your answers.
 
 ### Week 1
 
-* [ ] Create a git repository (M5)
+* [x] Create a git repository (M5)
 * [ ] Make sure that all team members have write access to the GitHub repository (M5)
 * [x] Create a dedicated environment for you project to keep track of your packages (M2)
 * [x] Create the initial file structure using cookiecutter with an appropriate template (M6)
@@ -179,7 +179,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 5 fill here ---
+From the [MLOps template](https://github.com/SkafteNicki/mlops_template)...
 
 ### Question 6
 
