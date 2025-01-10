@@ -17,7 +17,7 @@ The framework will be incorporated through:
 - Lightning DataModules for standardized data loading and processing
 - Built-in training features for optimization and debugging
 
-### Data Management and Augmentation
+### Additional Framework: Albumentations Data Management and Augmentation
 
 The initial dataset consists of car damage images organized into six categories:
 1. Crack
@@ -27,7 +27,6 @@ The initial dataset consists of car damage images organized into six categories:
 5. Glass shatter
 6. Lamp broken
 
-Data Augmentation:
 We will utilize the Albumentations library for robust image augmentation:
 - Geometric transformations (rotation, flipping, scaling)
 - Color augmentations (brightness, contrast, hue)
