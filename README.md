@@ -61,6 +61,7 @@ The directory structure of the project looks like this:
 │ └── test_model.py
 ├── .gitignore
 ├── .pre-commit-config.yaml
+├── environment.yaml # Conda environment file
 ├── LICENSE
 ├── pyproject.toml # Python project file
 ├── README.md # Project README
