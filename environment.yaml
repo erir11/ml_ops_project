@@ -1,0 +1,15 @@
+name: ml_ops_project
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python==3.11
+  - pip
+  - setuptools
+  - setuptools-scm
+  - pip:
+    - -r requirements.txt
+    - -r requirements_dev.txt
+
+variables:
+  PYTHONPATH: ${CONDA_PREFIX}/lib/python3.11/site-packages
