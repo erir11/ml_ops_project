@@ -8,10 +8,7 @@ import torch.nn as nn
 import wandb
 from torch.optim import Adam
 from torch.optim.lr_scheduler import StepLR
-from torchmetrics.classification import (
-    MulticlassConfusionMatrix,
-    MulticlassF1Score,
-)
+from torchmetrics.classification import MulticlassConfusionMatrix, MulticlassF1Score
 from torchvision import models
 
 
