@@ -146,7 +146,7 @@ class CarDamageDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             shuffle=True,
             num_workers=self.num_workers,
-            pin_memory=True,
+            # pin_memory=True,
             persistent_workers=True,
             drop_last=True,  # Prevent issues with last incomplete batch
         )
@@ -157,7 +157,7 @@ class CarDamageDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             shuffle=False,
             num_workers=self.num_workers,
-            pin_memory=True,
+            # pin_memory=True,
             persistent_workers=True,
         )
 
@@ -167,7 +167,7 @@ class CarDamageDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             shuffle=False,
             num_workers=self.num_workers,
-            pin_memory=True,
+            # pin_memory=True,
             persistent_workers=True,
         )
 

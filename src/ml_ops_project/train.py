@@ -1,13 +1,15 @@
+import os
 from pathlib import Path
 
 import hydra
 import pytorch_lightning as pl
-from model import CarDamageModel
+import wandb
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
 
-from data import CarDamageDataModule
+from ml_ops_project.data import CarDamageDataModule
+from ml_ops_project.model import CarDamageModel
 
 
 @hydra.main(version_base="1.1", config_path="../../configs", config_name="config")
@@ -18,14 +20,17 @@ def main(cfg: DictConfig) -> None:
     # Set seed for reproducibility
     pl.seed_everything(cfg.seed)
 
-    # Initialize Wandb Logger
-    wandb_logger = WandbLogger(
-        project=cfg.logger.wandb.project,
-        entity=cfg.logger.wandb.entity,
-        log_model=cfg.logger.wandb.log_model,
-    )
+    wandb.login(key=os.getenv("WANDB_API_KEY"))
 
-    # Initialize DataModule
+    # Initialize Wandb Logger with environment variables, falling back to config values
+    wandb_logger = WandbLogger(
+        project=os.getenv("WANDB_PROJECT", cfg.logger.wandb.project),
+        entity=os.getenv("WANDB_ENTITY", cfg.logger.wandb.entity),
+        log_model=cfg.logger.wandb.log_model,  # Keep this from config as it's not sensitive
+    )
+    # Note: WANDB_API_KEY is automatically picked up by wandb from environment
+
+    # Rest of your code remains the same
     data_module = CarDamageDataModule(
         data_dir=Path(cfg.data.data_dir),
         batch_size=cfg.data.batch_size,
