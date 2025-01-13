@@ -49,3 +49,6 @@ known-first-party = ["ml_ops_project"]
 
 [tool.coverage.run]
 omit = ["tests/*"]
+
+[project.scripts]
+prepare_data = "ml_ops_project.prepare_data:prepare_dataset"
