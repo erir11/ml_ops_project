@@ -70,5 +70,6 @@ def main(cfg: DictConfig) -> None:
     print(f"Best model path: {checkpoint_callback.best_model_path}")
     print(f"Best model score: {checkpoint_callback.best_model_score}")
 
+
 if __name__ == "__main__":
     main()

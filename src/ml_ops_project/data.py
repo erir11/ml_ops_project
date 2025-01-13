@@ -14,12 +14,7 @@ from torch.utils.data import DataLoader, Dataset
 class CarDamageDataset(Dataset):
     """Dataset for car damage classification."""
 
-    def __init__(
-        self,
-        data_dir: Path,
-        split: str = 'train',
-        transform = None
-    ):
+    def __init__(self, data_dir: Path, split: str = "train", transform=None):
         self.data_dir = data_dir / split
         self.transform = transform
 
@@ -31,7 +26,7 @@ class CarDamageDataset(Dataset):
         self.df = pd.read_csv(csv_path)
 
         # Validate the required columns exist
-        required_columns = ['filename', 'label']
+        required_columns = ["filename", "label"]
         missing_columns = [col for col in required_columns if col not in self.df.columns]
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
@@ -39,14 +34,14 @@ class CarDamageDataset(Dataset):
         # Validate all image files exist
         images_dir = self.data_dir / "images"
         missing_images = []
-        for filename in self.df['filename']:
+        for filename in self.df["filename"]:
             if not (images_dir / filename).exists():
                 missing_images.append(filename)
         if missing_images:
             raise FileNotFoundError(f"Missing {len(missing_images)} image files. First few: {missing_images[:5]}")
 
         # Validate labels
-        unique_labels = self.df['label'].unique()
+        unique_labels = self.df["label"].unique()
         print(f"Found {len(unique_labels)} unique labels: {sorted(unique_labels)}")
 
     def __len__(self) -> int:
@@ -56,21 +51,22 @@ class CarDamageDataset(Dataset):
         row = self.df.iloc[idx]
         try:
             # Load image
-            image_path = self.data_dir / "images" / row['filename']
-            image = np.array(Image.open(image_path).convert('RGB'))
+            image_path = self.data_dir / "images" / row["filename"]
+            image = np.array(Image.open(image_path).convert("RGB"))
 
             if self.transform:
                 transformed = self.transform(image=image)
-                image = transformed['image']
+                image = transformed["image"]
 
             # Get label
-            label = row['label'] - 1  # Convert to 0-based index
+            label = row["label"] - 1  # Convert to 0-based index
 
             return image, label
 
         except Exception as e:
             print(f"Error loading image {row['filename']}: {str(e)}")
             raise
+
 
 class CarDamageDataModule(pl.LightningDataModule):
     """PyTorch Lightning DataModule for car damage classification."""
@@ -80,7 +76,7 @@ class CarDamageDataModule(pl.LightningDataModule):
         data_dir: Path,
         batch_size: int = 32,
         num_workers: int = 4,
-        image_size: Tuple[int, int] = (256, 256)  # Match ResNet expected input
+        image_size: Tuple[int, int] = (256, 256),  # Match ResNet expected input
     ):
         super().__init__()
         self.data_dir = data_dir
@@ -91,69 +87,57 @@ class CarDamageDataModule(pl.LightningDataModule):
     def setup(self, stage: Optional[str] = None):
         """Setup datasets for each stage."""
         # Define transforms
-        self.train_transform = A.Compose([
-            A.RandomResizedCrop(
-                size=self.image_size,
-                scale=(0.8, 1.0),  # Only crop up to 20% of the image
-                ratio=(0.75, 1.333),  # Standard aspect ratio range
-            ),
-            A.HorizontalFlip(p=0.5),
-            A.RandomRotate90(p=0.5),
-            A.OneOf([
-                # Fixed GaussNoise parameters
-                A.GaussNoise(p=0.5),  # Removed 'mean' parameter and fixed var_limit format
-                A.GaussianBlur(p=0.5),
-            ], p=0.3),
-            A.OneOf([
-                # Fixed OpticalDistortion parameters
-                A.OpticalDistortion(distort_limit=0.05, p=0.5),  # Removed 'shift_limit' parameter
-                A.GridDistortion(distort_limit=0.1, p=0.5),
-            ], p=0.3),
-            A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1, p=0.3),
-            A.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225]
-            ),
-            ToTensorV2()
-        ])
+        self.train_transform = A.Compose(
+            [
+                A.RandomResizedCrop(
+                    size=self.image_size,
+                    scale=(0.8, 1.0),  # Only crop up to 20% of the image
+                    ratio=(0.75, 1.333),  # Standard aspect ratio range
+                ),
+                A.HorizontalFlip(p=0.5),
+                A.RandomRotate90(p=0.5),
+                A.OneOf(
+                    [
+                        # Fixed GaussNoise parameters
+                        A.GaussNoise(p=0.5),  # Removed 'mean' parameter and fixed var_limit format
+                        A.GaussianBlur(p=0.5),
+                    ],
+                    p=0.3,
+                ),
+                A.OneOf(
+                    [
+                        # Fixed OpticalDistortion parameters
+                        A.OpticalDistortion(distort_limit=0.05, p=0.5),  # Removed 'shift_limit' parameter
+                        A.GridDistortion(distort_limit=0.1, p=0.5),
+                    ],
+                    p=0.3,
+                ),
+                A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1, p=0.3),
+                A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                ToTensorV2(),
+            ]
+        )
 
-        self.val_transform = A.Compose([
-            A.Resize(
-                height=self.image_size[0],
-                width=self.image_size[1],
-                interpolation=Image.BICUBIC
-            ),
-            A.CenterCrop(height=self.image_size[0], width=self.image_size[1]),
-            A.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225]
-            ),
-            ToTensorV2()
-        ])
+        self.val_transform = A.Compose(
+            [
+                A.Resize(height=self.image_size[0], width=self.image_size[1], interpolation=Image.BICUBIC),
+                A.CenterCrop(height=self.image_size[0], width=self.image_size[1]),
+                A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                ToTensorV2(),
+            ]
+        )
 
         # Create datasets
         if stage == "fit" or stage is None:
-            self.train_dataset = CarDamageDataset(
-                self.data_dir,
-                split='train',
-                transform=self.train_transform
-            )
-            self.val_dataset = CarDamageDataset(
-                self.data_dir,
-                split='val',
-                transform=self.val_transform
-            )
+            self.train_dataset = CarDamageDataset(self.data_dir, split="train", transform=self.train_transform)
+            self.val_dataset = CarDamageDataset(self.data_dir, split="val", transform=self.val_transform)
 
             # Print dataset sizes
             print(f"Train dataset size: {len(self.train_dataset)}")
             print(f"Validation dataset size: {len(self.val_dataset)}")
 
         if stage == "test" or stage is None:
-            self.test_dataset = CarDamageDataset(
-                self.data_dir,
-                split='test',
-                transform=self.val_transform
-            )
+            self.test_dataset = CarDamageDataset(self.data_dir, split="test", transform=self.val_transform)
             print(f"Test dataset size: {len(self.test_dataset)}")
 
     def train_dataloader(self) -> DataLoader:
@@ -164,7 +148,7 @@ class CarDamageDataModule(pl.LightningDataModule):
             num_workers=self.num_workers,
             pin_memory=True,
             persistent_workers=True,
-            drop_last=True  # Prevent issues with last incomplete batch
+            drop_last=True,  # Prevent issues with last incomplete batch
         )
 
     def val_dataloader(self) -> DataLoader:
@@ -174,7 +158,7 @@ class CarDamageDataModule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             pin_memory=True,
-            persistent_workers=True
+            persistent_workers=True,
         )
 
     def test_dataloader(self) -> DataLoader:
@@ -184,8 +168,9 @@ class CarDamageDataModule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             pin_memory=True,
-            persistent_workers=True
+            persistent_workers=True,
         )
+
 
 # Example usage:
 if __name__ == "__main__":
