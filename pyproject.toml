@@ -7,13 +7,13 @@ name = "ml_ops_project"
 version = "0.0.1"
 description = "A short description of the project."
 authors = [
-  { name = "erir11", email = "your@email.com" },
+    { name = "erir11", email = "your@email.com" },
 ]
 license = { file = "LICENSE" }
 keywords = ["machine learning", "MLOps"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Programming Language :: Python :: 3",
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
 ]
 readme = "README.md"
 requires-python = ">=3.11"
@@ -27,16 +27,6 @@ dev = {file = ['requirements_dev.txt']}
 
 [tool.ruff]
 line-length = 120
-
-# Enable pycodestyle (E), pyflakes (F), isort (I)
-select = ["E", "F", "I"]
-ignore = []
-
-# Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["A", "B", "C", "D", "E", "F", "I"]
-unfixable = []
-
-# Exclude a variety of commonly ignored directories.
 exclude = [
     ".git",
     ".github",
@@ -46,9 +36,16 @@ exclude = [
     "dist"
 ]
 
-[tool.ruff.isort]
-known-first-party = ["ml_ops_project"]
+[tool.ruff.lint]
+# Enable pycodestyle (E), pyflakes (F), isort (I)
+select = ["E", "F", "I"]
+ignore = []
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "I"]
+unfixable = []
 
+[tool.ruff.lint.isort]
+known-first-party = ["ml_ops_project"]
 
 [tool.coverage.run]
 omit = ["tests/*"]
