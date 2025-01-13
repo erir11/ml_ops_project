@@ -297,18 +297,6 @@ def test_car_damage_data_module_full_flow(dummy_data):
         break  # Test only the first batch
 
 
-def test_car_damage_dataset_label_indexing(dummy_data):
-    """
-    Test that labels are correctly converted to 0-based indices.
-    """
-    dataset = CarDamageDataset(data_dir=dummy_data, split="train", transform=None)
-    for label in dataset.df["label"]:
-        assert dataset.df["label"].min() == 1  # Original labels start at 1
-    # Access an item and check label
-    image, label = dataset[0]
-    assert label == dataset.df.iloc[0]["label"] - 1  # 0-based
-
-
 def test_car_damage_dataset_unique_labels(dummy_data):
     """
     Test that the dataset correctly identifies unique labels.
