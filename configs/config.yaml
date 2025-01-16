@@ -23,7 +23,7 @@ model:
 # Trainer settings
 trainer:
   max_epochs: 20
-  precision: 16  # 32 for full precision, 16 for mixed precision
+  precision: '16-mixed'  # 32 for full precision, 16 for mixed precision
   callbacks:
     checkpoint:
       monitor: "val_f1"
