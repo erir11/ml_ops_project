@@ -12,7 +12,11 @@ from ml_ops_project.data import CarDamageDataModule
 from ml_ops_project.model import CarDamageModel
 
 
-@hydra.main(version_base="1.1", config_path="../../configs", config_name="config")
+@hydra.main(
+    version_base="1.1",
+    config_path=str(Path(__file__).parents[2] / "configs"),  # up 2 parents from train.py to get to your_repo/
+    config_name="config"
+)
 def main(cfg: DictConfig) -> None:
     print("Configuration:")
     print(OmegaConf.to_yaml(cfg))
@@ -78,3 +82,4 @@ def main(cfg: DictConfig) -> None:
 
 if __name__ == "__main__":
     main()
+
