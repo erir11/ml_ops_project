@@ -126,7 +126,7 @@ The directory structure of the project looks like this:
 │ │ ├── __init__.py
 │ │ ├── api.py
 │ │ ├── data.py
-│ │ ├── evaluate.py
+│ │ ├── predict.py
 │ │ ├── models.py
 │ │ ├── train.py
 │ │ ├── prepare_data.py
