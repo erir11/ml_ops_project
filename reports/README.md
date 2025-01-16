@@ -128,7 +128,7 @@ will check the repositories and the code to verify your answers.
 > *, sXXXXXX, sXXXXXX*
 >
 > Answer:
-s233347, 
+s233347,
 
 --- question 2 fill here ---
 
