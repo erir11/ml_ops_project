@@ -125,9 +125,10 @@ will check the repositories and the code to verify your answers.
 >
 > Example:
 >
-> *sXXXXXX, sXXXXXX, sXXXXXX*
+> *, sXXXXXX, sXXXXXX*
 >
 > Answer:
+s233347, 
 
 --- question 2 fill here ---
 
@@ -141,7 +142,9 @@ will check the repositories and the code to verify your answers.
 > *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
 >
-> Answer:
+> Answer: We used the Albumentations library in our project to perform data augmentation on images. By using functionalities such as RandomResizedCrop, HorizontalFlip, GaussNoise, GaussianBlur, and OpticalDistortion, we generated a wide variety of transformations to enhance model robustness. These operations helped us randomly crop images, flip them horizontally, introduce noise, and even distort them with grid-based or optical manipulations.
+
+> Torch metrics was used to get the F1 score, which captures both precision and recall in a single measure, making it especially useful for imbalanced datasets.
 
 --- question 3 fill here ---
 
