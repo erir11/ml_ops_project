@@ -24,4 +24,4 @@ loguru==0.7.3
 fastapi==0.103.0        # Framework for building the API
 uvicorn==0.23.2         # ASGI server to run FastAPI
 numpy==1.26.0           # For numerical operations in the API
-joblib==1.4.1           # For loading machine learning models
+joblib==1.4.2           # For loading machine learning models
