@@ -1,32 +1,28 @@
-# Use a specific Python version
+# Use Python 3.11 slim as the base image
 FROM python:3.11-slim AS base
 
-# Install required system dependencies
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y build-essential gcc && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Set the working directory inside the container
+WORKDIR /ml_ops_project
 
-# Set working directory
-WORKDIR /app
+# Install system dependencies
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    build-essential \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy only requirements files first for better caching
+# Copy the requirements file into the container
 COPY requirements.txt requirements.txt
-COPY requirements_dev.txt requirements_dev.txt
 
-# Install dependencies from requirements files
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt --no-cache-dir --verbose
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application files
-COPY src/ src/
-COPY README.md README.md
-COPY pyproject.toml pyproject.toml
+# Copy the application code
+COPY src /ml_ops_project/src
 
-# Install the package in editable mode
-RUN pip install . --no-deps --no-cache-dir --verbose
+# Copy the model explicitly
+COPY models /ml_ops_project/models
 
-# Expose port 8000 for the FastAPI application
+# Expose the port that FastAPI will run on
 EXPOSE 8000
 
-# Define the entry point for the container
-ENTRYPOINT ["uvicorn", "src.ml_ops_project.api:app", "--host", "0.0.0.0", "--port", "8000"]
+# Set the entry point to start the application
+CMD ["uvicorn", "src.ml_ops_project.main:app", "--host", "0.0.0.0", "--port", "8000"]
