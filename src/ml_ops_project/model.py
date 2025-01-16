@@ -93,6 +93,14 @@ class CarDamageModel(pl.LightningModule):
         plt.close(fig)
         self.confusion_matrix.reset()
 
+
+
+
+
+
+
+        
+
     def test_step(self, batch: Any, batch_idx: int):
         images, labels = batch
         outputs = self(images)
