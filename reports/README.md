@@ -197,7 +197,9 @@ This ensures all team members have identical development environments with the s
 >
 > Answer:
 
-From the [MLOps template](https://github.com/SkafteNicki/mlops_template)...
+From the [MLOps template](https://github.com/SkafteNicki/mlops_template) we have filled the src, tests, configs, data, dockerfiles, reports and models folders. We did not see any need for notebooks, so we deleted that folder. Inside the src folder we split the data script into a `prepare_data.py` and a `data.py`script. Further we did not use the visualize script so we also deleted that one. We the `evaluate.py` script was replace with a `predict.py` script. This was done because our training script also evaluates the model (through the pytorch-lightning Trainer module). In the tests folder we filled in pytests for the model and data, but we decided not to further this with api tests as time constraints called for other priorities.
+
+```bash
 
 ### Question 6
 
@@ -212,16 +214,16 @@ From the [MLOps template](https://github.com/SkafteNicki/mlops_template)...
 >
 > Answer:
 
-We used ruff for linting and formatting with specific rule selections (E, F, I) covering error detection, flake8 rules and import sorting. Our ruff configuration enforces line lengths of 120 characters (Which is a bit more than the standard pep8 recommendation). The linting rules enforced by ruff (including pycodestyle and isort) ensure consistent code style across the project, making it easier to review and maintain code. We added format checks to the github actions tests.yaml file like this
+We used ruff for linting and formatting with specific rule selections (E, F, I) covering error detection, flake8 rules and import sorting. Our ruff configuration enforces line lengths of 120 characters (which is a bit more than the standard PEP 8 recommendation) and excludes common directories like .git, build, and dist. Throughout the project, we strived to maintain consistent use of Python type hints to improve code clarity and catch type-related errors early. For documentation, we made an effort to include descriptive docstrings for our functions and classes, particularly in core modules like prepare_data and predict.
+These practices are vital in larger projects for several key reasons:
 
-```yaml
-      - name: Run format checks
-        run: |
-          ruff check .
-          ruff format --check .
-```
+1. Consistent formatting makes code reviews more efficient and helps new team members adapt quickly
 
- **ADD ABOUT DOCUMENTATION**
+2. Type hints serve as live documentation of expected inputs and outputs, catching potential errors before runtime
+
+3. Docstrings and clear documentation reduce onboarding time and make the codebase more maintainable
+
+The importance of these tools became evident in our daily workflow - code reviews focused on logic rather than style issues, and type hints helped prevent type-related bugs during development.
 
 ## Version control
 
@@ -240,7 +242,23 @@ We used ruff for linting and formatting with specific rule selections (E, F, I) 
 >
 > Answer:
 
---- question 7 fill here ---
+In total, we have implemented 15 tests in test_data.py and 7 tests in test_model.py, for a total of 22 tests. The tests primarily focus on two critical components:
+
+1. Data Pipeline Testing (`test_data.py`):
+- Dataset initialization and validation
+- Data loading and transformations
+- Error handling for corrupted/missing data
+- DataModule functionality including batch processing
+- Image transformations and preprocessing
+
+2. Model Testing (`test_model.py`):
+- Model initialization
+- Forward pass functionality
+- Training and validation steps
+- Optimizer and scheduler configuration
+- Output shape verification across different batch sizes
+
+These tests ensure robust data handling and model behavior, which are crucial for the reliability of our machine learning pipeline. The data pipeline testing is particularly important as data issues are often the source of training problems.
 
 ### Question 8
 
