@@ -1,10 +1,10 @@
 import pytest
 from httpx import AsyncClient
-import os
 
 BASE_URL = "http://127.0.0.1:8000"
 VALID_IMAGE_PATH = "data/example/val/images/1.jpg"
 INVALID_IMAGE_PATH = "data/example/val/images/nonexistent.jpg"
+
 
 @pytest.mark.asyncio
 async def test_root_endpoint():
@@ -15,6 +15,7 @@ async def test_root_endpoint():
     assert response.json() == {"message": "Car Damage Detection API"}, "Root endpoint failed: Unexpected response JSON"
     print("✅ test_root_endpoint passed.")
 
+
 @pytest.mark.asyncio
 async def test_predict_endpoint_valid_input():
     """Test the /predict endpoint with a valid image path."""
@@ -24,6 +25,7 @@ async def test_predict_endpoint_valid_input():
     assert response.status_code == 200, "Predict endpoint failed: Status code is not 200"
     assert "predictions" in response.json(), "Predict endpoint failed: No 'predictions' key in response"
     print("✅ test_predict_endpoint_valid_input passed.")
+
 
 @pytest.mark.asyncio
 async def test_predict_endpoint_invalid_input():
