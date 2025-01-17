@@ -199,7 +199,6 @@ This ensures all team members have identical development environments with the s
 
 From the [MLOps template](https://github.com/SkafteNicki/mlops_template) we have filled the src, tests, configs, data, dockerfiles, reports and models folders. We did not see any need for notebooks, so we deleted that folder. Inside the src folder we split the data script into a `prepare_data.py` and a `data.py`script. Further we did not use the visualize script so we also deleted that one. We the `evaluate.py` script was replace with a `predict.py` script. This was done because our training script also evaluates the model (through the pytorch-lightning Trainer module). In the tests folder we filled in pytests for the model and data, but we decided not to further this with api tests as time constraints called for other priorities.
 
-```bash
 
 ### Question 6
 
@@ -242,7 +241,7 @@ The importance of these tools became evident in our daily workflow - code review
 >
 > Answer:
 
-In total, we have implemented 15 tests in test_data.py and 7 tests in test_model.py, for a total of 22 tests. The tests primarily focus on two critical components:
+In total, we have implemented tests in test_data.py and tests in test_model.py, for a total of 19 tests. The tests primarily focus on two critical components:
 
 1. Data Pipeline Testing (`test_data.py`):
 - Dataset initialization and validation
@@ -273,7 +272,19 @@ These tests ensure robust data handling and model behavior, which are crucial fo
 >
 > Answer:
 
---- question 8 fill here ---
+Based on our coverage report, our total code coverage is 38%, which is relatively low. However, this is to be expected, as we did not implement test for all crucial parts of our codebase.
+
+Even if we achieved 100% code coverage, we would not consider the code completely error-free.
+
+1. Code coverage only measures which lines of code are executed during tests, not the quality or comprehensiveness of those tests
+
+2. Edge cases and real-world scenarios might not be captured even with full line coverage
+
+3. Integration issues between components might still exist even if individual units are fully tested
+
+4. Certain types of errors like race conditions, memory leaks, or performance issues might not be detected by unit tests
+
+5. Business logic errors could still exist even if the code executes without technical errors
 
 ### Question 9
 
