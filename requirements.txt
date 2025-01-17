@@ -51,3 +51,4 @@ wandb==0.19.2
 # API Utilities
 numpy==1.26.0      # Numerical operations
 joblib==1.4.2      # Model loading/saving
+wandb==0.19.2

@@ -53,4 +53,4 @@ omit = ["tests/*"]
 [project.scripts]
 prepare_data = "ml_ops_project.prepare_data:prepare_dataset"
 train = "ml_ops_project.train:main"
-
+predict = "ml_ops_project.predict:main"

@@ -59,7 +59,7 @@ will check the repositories and the code to verify your answers.
 * [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
 * [x] Do a bit of code typing and remember to document essential parts of your code (M7)
 * [ ] Setup version control for your data or part of your data (M8)
-* [WIP] Add command line interfaces and project commands to your code where it makes sense (M9)
+* [x] Add command line interfaces and project commands to your code where it makes sense (M9)
 * [x] Construct one or multiple docker files for your code (M10)
 * [x] Build the docker files locally and make sure they work as intended (M10)
 * [x] Write one or multiple configurations files for your experiments (M11)
@@ -78,7 +78,7 @@ will check the repositories and the code to verify your answers.
 * [x] Get some continuous integration running on the GitHub repository (M17)
 * [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
 * [x] Add a linting step to your continuous integration (M17)
-* [ ] Add pre-commit hooks to your version control setup (M18)
+* [X] Add pre-commit hooks to your version control setup (M18)
 * [ ] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
@@ -125,9 +125,10 @@ will check the repositories and the code to verify your answers.
 >
 > Example:
 >
-> *sXXXXXX, sXXXXXX, sXXXXXX*
+> *, sXXXXXX, sXXXXXX*
 >
 > Answer:
+s233347,
 
 --- question 2 fill here ---
 
@@ -141,7 +142,9 @@ will check the repositories and the code to verify your answers.
 > *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
 >
-> Answer:
+> Answer: We used the Albumentations library in our project to perform data augmentation on images. By using functionalities such as RandomResizedCrop, HorizontalFlip, GaussNoise, GaussianBlur, and OpticalDistortion, we generated a wide variety of transformations to enhance model robustness. These operations helped us randomly crop images, flip them horizontally, introduce noise, and even distort them with grid-based or optical manipulations.
+
+> Torch metrics was used to get the F1 score, which captures both precision and recall in a single measure, making it especially useful for imbalanced datasets.
 
 --- question 3 fill here ---
 
@@ -194,7 +197,8 @@ This ensures all team members have identical development environments with the s
 >
 > Answer:
 
-From the [MLOps template](https://github.com/SkafteNicki/mlops_template)...
+From the [MLOps template](https://github.com/SkafteNicki/mlops_template) we have filled the src, tests, configs, data, dockerfiles, reports and models folders. We did not see any need for notebooks, so we deleted that folder. Inside the src folder we split the data script into a `prepare_data.py` and a `data.py`script. Further we did not use the visualize script so we also deleted that one. We the `evaluate.py` script was replace with a `predict.py` script. This was done because our training script also evaluates the model (through the pytorch-lightning Trainer module). In the tests folder we filled in pytests for the model and data, but we decided not to further this with api tests as time constraints called for other priorities.
+
 
 ### Question 6
 
@@ -209,16 +213,16 @@ From the [MLOps template](https://github.com/SkafteNicki/mlops_template)...
 >
 > Answer:
 
-We used ruff for linting and formatting with specific rule selections (E, F, I) covering error detection, flake8 rules and import sorting. Our ruff configuration enforces line lengths of 120 characters (Which is a bit more than the standard pep8 recommendation). The linting rules enforced by ruff (including pycodestyle and isort) ensure consistent code style across the project, making it easier to review and maintain code. We added format checks to the github actions tests.yaml file like this
+We used ruff for linting and formatting with specific rule selections (E, F, I) covering error detection, flake8 rules and import sorting. Our ruff configuration enforces line lengths of 120 characters (which is a bit more than the standard PEP 8 recommendation) and excludes common directories like .git, build, and dist. Throughout the project, we strived to maintain consistent use of Python type hints to improve code clarity and catch type-related errors early. For documentation, we made an effort to include descriptive docstrings for our functions and classes, particularly in core modules like prepare_data and predict.
+These practices are vital in larger projects for several key reasons:
 
-```yaml
-      - name: Run format checks
-        run: |
-          ruff check .
-          ruff format --check .
-```
+1. Consistent formatting makes code reviews more efficient and helps new team members adapt quickly
 
- **ADD ABOUT DOCUMENTATION**
+2. Type hints serve as live documentation of expected inputs and outputs, catching potential errors before runtime
+
+3. Docstrings and clear documentation reduce onboarding time and make the codebase more maintainable
+
+The importance of these tools became evident in our daily workflow - code reviews focused on logic rather than style issues, and type hints helped prevent type-related bugs during development.
 
 ## Version control
 
@@ -237,7 +241,23 @@ We used ruff for linting and formatting with specific rule selections (E, F, I) 
 >
 > Answer:
 
---- question 7 fill here ---
+In total, we have implemented tests in test_data.py and tests in test_model.py, for a total of 19 tests. The tests primarily focus on two critical components:
+
+1. Data Pipeline Testing (`test_data.py`):
+- Dataset initialization and validation
+- Data loading and transformations
+- Error handling for corrupted/missing data
+- DataModule functionality including batch processing
+- Image transformations and preprocessing
+
+2. Model Testing (`test_model.py`):
+- Model initialization
+- Forward pass functionality
+- Training and validation steps
+- Optimizer and scheduler configuration
+- Output shape verification across different batch sizes
+
+These tests ensure robust data handling and model behavior, which are crucial for the reliability of our machine learning pipeline. The data pipeline testing is particularly important as data issues are often the source of training problems.
 
 ### Question 8
 
@@ -252,7 +272,23 @@ We used ruff for linting and formatting with specific rule selections (E, F, I) 
 >
 > Answer:
 
---- question 8 fill here ---
+Based on our coverage report, our total code coverage is 38%, which is relatively low. However, this is to be expected, as we did not implement test for all crucial parts of our codebase.
+
+- Data handling has good coverage (85%): data.py
+- Model implementation has moderate coverage (63%): model.py
+- Three critical modules have 0% coverage: predict.py, prepare_data.py, and train.py
+
+Even if we achieved 100% code coverage, we would not consider the code completely error-free.
+
+1. Code coverage only measures which lines of code are executed during tests, not the quality or comprehensiveness of those tests
+
+2. Edge cases and real-world scenarios might not be captured even with full line coverage
+
+3. Integration issues between components might still exist even if individual units are fully tested
+
+4. Certain types of errors like race conditions, memory leaks, or performance issues might not be detected by unit tests
+
+5. Business logic errors could still exist even if the code executes without technical errors
 
 ### Question 9
 
@@ -299,7 +335,10 @@ We used ruff for linting and formatting with specific rule selections (E, F, I) 
 >
 > Answer:
 
---- question 11 fill here ---
+Our continuous integration is organized into two main GitHub Actions workflows plus automated dependency management. The first workflow runs pre-commit checks for code quality, using hooks for basic file validation and Ruff for both linting and formatting. It automatically fixes and commits minor issues.
+The second workflow handles unit testing across multiple operating systems (Ubuntu, Windows, and macOS) using a matrix strategy. It implements pip caching to speed up builds and uses coverage.py for test coverage reporting. Dependencies are managed through GitHub's Dependabot, which automatically creates pull requests for updates to both pip packages and GitHub Actions on a monthly schedule.
+
+An example of a triggered workflow can be seen [here](https://github.com/erir11/ml_ops_project/actions/runs/12827966987).
 
 ## Running code and tracking experiments
 
@@ -318,7 +357,41 @@ We used ruff for linting and formatting with specific rule selections (E, F, I) 
 >
 > Answer:
 
---- question 12 fill here ---
+For configuring and running experiments, we used Hydra and OmegaConf for managing configuration files. These allow easy management of parameters through configuration files, enhancing reproducibility and modularity.
+
+```python
+import hydra
+from omegaconf import DictConfig
+
+@hydra.main(config_path="configs", config_name="config")
+def main(cfg: DictConfig) -> None:
+    print("Experiment Configuration:")
+    print(OmegaConf.to_yaml(cfg))
+    # Experiment here
+
+if __name__ == "__main__":
+    main()
+```
+
+The configuration file (`config.yaml`) contains all the parameters such as model type, learning rates, and data paths. Here's a snippet from the one we used for training:
+
+```yaml
+seed: 42
+data:
+  data_dir: "../../../data/processed"
+  batch_size: 32
+  image_size: [256, 256]
+model:
+  name: "resnet50"
+  learning_rate: 2e-5
+trainer:
+  max_epochs: 20
+logger:
+  wandb:
+    project: "car-damage-classification"
+```
+
+Hydra simplifies experiment configuration by automatically overriding the defaults with specified values, enabling seamless experiment management.
 
 ### Question 13
 
@@ -333,7 +406,11 @@ We used ruff for linting and formatting with specific rule selections (E, F, I) 
 >
 > Answer:
 
---- question 13 fill here ---
+To ensure our experiments were reproducible and no information was lost, we used Hydra for configuration management. This allowed us to maintain all experiment settings, like model type and hyperparameters, in clear config files. Each time an experiment runs, Hydra logs the settings, making it easy to replicate the setup.
+
+We also used Weights & Biases (wandb) for tracking our experiments. Wandb logged metrics, parameters, and saved models during training. This ensures that all crucial details of the experiment are stored and can be accessed later.
+
+We saved all outputs, including logs and checkpoints, in an 'outputs' folder. This approach ensured that all data generated during the experiment is kept. To reproduce an experiment, one simply need to check the config files logged by Hydra and retrieve stored data from wandb or the outputs directory.
 
 ### Question 14
 
