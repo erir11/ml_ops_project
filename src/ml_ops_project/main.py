@@ -1,11 +1,13 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
-from PIL import Image
 import torch
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from PIL import Image
 from torchvision import transforms
+
 from src.ml_ops_project.model import CarDamageModel
 
 # Path to the model checkpoint
 MODEL_PATH = "models/model.ckpt"
+
 
 # Load the model
 def load_model():
@@ -17,26 +19,32 @@ def load_model():
     except Exception as e:
         raise RuntimeError(f"Failed to load model: {e}")
 
+
 # Preprocess the uploaded image
 def preprocess_image(file):
-    transform = transforms.Compose([
-        transforms.Resize((224, 224)),  # Resize image to 224x224
-        transforms.ToTensor(),  # Convert to Tensor
-        transforms.Normalize(
-            mean=[0.485, 0.456, 0.406],  # ImageNet mean
-            std=[0.229, 0.224, 0.225],   # ImageNet std
-        ),
-    ])
+    transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),  # Resize image to 224x224
+            transforms.ToTensor(),  # Convert to Tensor
+            transforms.Normalize(
+                mean=[0.485, 0.456, 0.406],  # ImageNet mean
+                std=[0.229, 0.224, 0.225],  # ImageNet std
+            ),
+        ]
+    )
     image = Image.open(file).convert("RGB")  # Ensure 3 channels
     return transform(image).unsqueeze(0)  # Add batch dimension
+
 
 # FastAPI app
 app = FastAPI()
 model = load_model()  # Load the model at startup
 
+
 @app.get("/")
 def read_root():
     return {"message": "Car Damage Detection API"}
+
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
