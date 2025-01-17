@@ -1,0 +1,88 @@
+
+Car Damage Detection API - Dockerized Setup
+===========================================
+
+This guide provides step-by-step instructions to set up and run the FastAPI-based Car Damage Detection API in a Docker container.
+
+Prerequisites
+-------------
+1. **Docker**:
+   - Ensure Docker is installed on your system. You can download it here: https://www.docker.com/get-started
+2. **Image File**:
+   - Have your image files ready for testing.
+3. **Model File**:
+   - Place the `model.ckpt` file in the `models` directory in your project.
+
+Building the Docker Image
+-------------------------
+1. Open a terminal and navigate to the directory containing the `api.dockerfile`.
+
+2. Build the Docker image using the following command:
+   docker build -t car-damage-detection -f api.dockerfile ..
+
+   - `-t car-damage-detection`: Tags the image with the name `car-damage-detection`.
+   - `-f api.dockerfile`: Specifies the Dockerfile to use.
+   - `..`: Sets the build context to the parent directory.
+
+Running the Docker Container
+----------------------------
+### With Host Directory Mounted
+If you want the container to have access to your local files:
+1. Run the following command:
+   docker run -p 8000:8000 -v "$(pwd)/models:/ml_ops_project/models" car-damage-detection
+
+   - `-p 8000:8000`: Maps port 8000 of the container to port 8000 on your machine.
+   - `-v "$(pwd)/models:/ml_ops_project/models"`: Mounts the `models` directory from your host to the container.
+
+2. Access the API at:
+   - Swagger UI: http://127.0.0.1:8000/docs
+   - Root endpoint: http://127.0.0.1:8000/
+
+### Without Host Directory Access
+If you want to upload image files directly:
+1. Ensure the container has the `model.ckpt` file during the build process.
+
+2. Run the container:
+   docker run -p 8000:8000 car-damage-detection
+
+3. Test the API by uploading image files directly via:
+   - Swagger UI: http://127.0.0.1:8000/docs
+   - `curl`:
+     curl -X POST "http://127.0.0.1:8000/predict"           -H "Content-Type: multipart/form-data"           -F "file=@path/to/image.jpg"
+
+Testing the API
+---------------
+### Example Requests
+- **Root Endpoint**:
+  curl -X GET http://127.0.0.1:8000/
+  Expected Response:
+  {"message": "Car Damage Detection API"}
+
+- **Predict Endpoint**:
+  Upload an image file:
+  curl -X POST "http://127.0.0.1:8000/predict"        -H "Content-Type: multipart/form-data"        -F "file=@path/to/your/image.jpg"
+  Expected Response:
+  {"predictions": [1]}
+
+Stopping the Container
+----------------------
+To stop the running container:
+1. Find the container ID:
+   docker ps
+
+2. Stop the container:
+   docker stop <container_id>
+
+Troubleshooting
+---------------
+### Common Issues
+1. **Model Not Found**:
+   Ensure the `model.ckpt` file is available in the `models` directory or was copied during the build process.
+
+2. **Port Already in Use**:
+   Use a different host port, for example:
+   docker run -p 8080:8000 car-damage-detection
+
+3. **File Not Found Error**:
+   - Ensure the image file exists if using host-mounted directories.
+   - If uploading a file, verify the correct file path is specified.
