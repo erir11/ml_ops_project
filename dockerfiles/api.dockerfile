@@ -1,28 +1,36 @@
-# Use Python 3.11 slim as the base image
-FROM python:3.11-slim AS base
-
-# Set the working directory inside the container
-WORKDIR /ml_ops_project
+# Base image - using python slim image which has ARM support
+FROM python:3.11-slim
 
 # Install system dependencies
-RUN apt-get update && apt-get install --no-install-recommends -y \
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
     build-essential \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    gcc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements file into the container
+
+# Set working directory
+WORKDIR /app
+
+# Copy project files
+COPY src src/
 COPY requirements.txt requirements.txt
+COPY requirements_dev.txt requirements_dev.txt
+COPY README.md README.md
+COPY pyproject.toml pyproject.toml
+COPY configs configs/
+COPY models models/
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Create data directory structure
+RUN mkdir -p /app/data/processed/train
 
-# Copy the application code
-COPY src /ml_ops_project/src
+# Install dependencies and project package with verbose output
+RUN pip install -r requirements.txt --no-cache-dir -v && \
+    pip install -e . --no-deps --no-cache-dir -v
 
-# Copy the model explicitly
-COPY models /ml_ops_project/models
+# Set environment variables for non-sensitive data
+ENV PYTHONPATH=/app
 
-# Expose the port that FastAPI will run on
-EXPOSE 8000
-
-# Set the entry point to start the application
-CMD ["uvicorn", "src.ml_ops_project.api:app", "--host", "0.0.0.0", "--port", "8000"]
+# Default command to run api
+ENTRYPOINT ["python", "-u", "src/ml_ops_project/api.py", "--model_path", "models/model.ckpt"]
