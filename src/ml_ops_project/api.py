@@ -1,62 +1,108 @@
-import torch
+import logging
+import os
+import tempfile
+from pathlib import Path
+from typing import List
+
+import uvicorn
 from fastapi import FastAPI, File, HTTPException, UploadFile
-from PIL import Image
-from torchvision import transforms
 
-from src.ml_ops_project.model import CarDamageModel
+from ml_ops_project.predict import DamagePrediction
 
-# Path to the model checkpoint
-MODEL_PATH = "models/model.ckpt"
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
-# Load the model
-def load_model():
-    try:
-        # Load the CarDamageModel from the checkpoint
-        model = CarDamageModel.load_from_checkpoint(MODEL_PATH, map_location=torch.device("cpu"))
-        model.eval()  # Set the model to evaluation mode
-        return model
-    except Exception as e:
-        raise RuntimeError(f"Failed to load model: {e}")
+class DamageDetectionAPI:
+    def __init__(self, model_path: str = None):
+        """Initialize the API with model predictor."""
+        self.app = FastAPI(title="Car Damage Detection API")
+        try:
+            self.predictor = DamagePrediction(model_path=model_path)
+            logger.info("Model loaded successfully")
+        except Exception as e:
+            logger.error(f"Failed to load model: {str(e)}")
+            raise
+
+        self.register_routes()
+
+    def register_routes(self):
+        @self.app.get("/")
+        def read_root():
+            model_version = Path(self.predictor.model_path).stem if self.predictor.model_path else "no_model"
+            return {
+                "status": "healthy",
+                "model_version": model_version,
+                "damage_classes": self.predictor.DAMAGE_CLASSES,
+            }
+
+        @self.app.post("/predict")
+        async def predict_damage(file: UploadFile = File(...)):
+            if not file.content_type.startswith("image/"):
+                raise HTTPException(status_code=400, detail="File must be an image")
+            try:
+                # Use a temporary file to save the uploaded content
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_file:
+                    contents = await file.read()
+                    temp_file.write(contents)
+                    temp_file.flush()
+                    temp_file.seek(0)
+
+                    logger.debug(f"File {file.filename} saved to temporary path {temp_file.name}")
+
+                    # Pass the file path to predict_single
+                    result = self.predictor.predict_single(temp_file.name)
+
+                # Delete the temporary file after prediction
+                os.unlink(temp_file.name)
+
+                if result["status"] == "error":
+                    raise HTTPException(status_code=500, detail=result["error"])
+
+                return result
+            except HTTPException as http_exc:
+                raise http_exc
+            except Exception as e:
+                logger.error(f"Prediction failed: {str(e)}")
+                raise HTTPException(status_code=500, detail=f"An error occurred during prediction: {str(e)}")
+
+        @self.app.post("/predict/batch")
+        async def predict_batch(files: List[UploadFile] = File(...)):
+            results = []
+            try:
+                for file in files:
+                    if not file.content_type.startswith("image/"):
+                        raise HTTPException(status_code=400, detail=f"File {file.filename} must be an image")
+                    # Temporary file handling for batch process
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_file:
+                        contents = await file.read()
+                        temp_file.write(contents)
+                        temp_file.flush()
+                        temp_file.seek(0)
+
+                        logger.debug(f"File {file.filename} saved to temporary path {temp_file.name}")
+
+                        # Pass the file path to predict_single
+                        result = self.predictor.predict_single(temp_file.name)
+                        results.append(result)
+
+                    # Delete the temporary file after prediction
+                    os.unlink(temp_file.name)
+
+                return results
+            except HTTPException as http_exc:
+                raise http_exc
+            except Exception as e:
+                logger.error(f"Batch prediction failed: {str(e)}")
+                raise HTTPException(status_code=500, detail=f"An error occurred during batch prediction: {str(e)}")
 
 
-# Preprocess the uploaded image
-def preprocess_image(file):
-    transform = transforms.Compose(
-        [
-            transforms.Resize((224, 224)),  # Resize image to 224x224
-            transforms.ToTensor(),  # Convert to Tensor
-            transforms.Normalize(
-                mean=[0.485, 0.456, 0.406],  # ImageNet mean
-                std=[0.229, 0.224, 0.225],  # ImageNet std
-            ),
-        ]
-    )
-    image = Image.open(file).convert("RGB")  # Ensure 3 channels
-    return transform(image).unsqueeze(0)  # Add batch dimension
+def create_app(model_path: str = None) -> FastAPI:
+    """Create and configure the FastAPI application."""
+    api = DamageDetectionAPI(model_path=model_path)
+    return api.app
 
 
-# FastAPI app
-app = FastAPI()
-model = load_model()  # Load the model at startup
-
-
-@app.get("/")
-def read_root():
-    return {"message": "Car Damage Detection API"}
-
-
-@app.post("/predict")
-async def predict(file: UploadFile = File(...)):
-    try:
-        # Preprocess the uploaded file
-        image_tensor = preprocess_image(file.file)
-
-        # Perform inference
-        with torch.no_grad():
-            outputs = model(image_tensor)
-            predictions = torch.argmax(outputs, dim=1).tolist()  # Get predicted class
-
-        return {"predictions": predictions}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {e}")
+if __name__ == "__main__":
+    app = create_app()
+    uvicorn.run(app, host="0.0.0.0", port=8000)
