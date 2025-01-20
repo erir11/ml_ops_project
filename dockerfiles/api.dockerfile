@@ -1,17 +1,28 @@
-# Change from latest to a specific version if your requirements.txt
+# Use Python 3.11 slim as the base image
 FROM python:3.11-slim AS base
 
-RUN apt update && \
-    apt install --no-install-recommends -y build-essential gcc && \
-    apt clean && rm -rf /var/lib/apt/lists/*
+# Set the working directory inside the container
+WORKDIR /ml_ops_project
 
-COPY src src/
+# Install system dependencies
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    build-essential \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy the requirements file into the container
 COPY requirements.txt requirements.txt
-COPY requirements_dev.txt requirements_dev.txt
-COPY README.md README.md
-COPY pyproject.toml pyproject.toml
 
-RUN pip install -r requirements.txt --no-cache-dir --verbose
-RUN pip install . --no-deps --no-cache-dir --verbose
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-ENTRYPOINT ["uvicorn", "src/ml_ops_project/api:app", "--host", "0.0.0.0", "--port", "8000"]
+# Copy the application code
+COPY src /ml_ops_project/src
+
+# Copy the model explicitly
+COPY models /ml_ops_project/models
+
+# Expose the port that FastAPI will run on
+EXPOSE 8000
+
+# Set the entry point to start the application
+CMD ["uvicorn", "src.ml_ops_project.main:app", "--host", "0.0.0.0", "--port", "8000"]
