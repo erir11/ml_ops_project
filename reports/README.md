@@ -197,7 +197,7 @@ This ensures all team members have identical development environments with the s
 >
 > Answer:
 
-From the [MLOps template](https://github.com/SkafteNicki/mlops_template) we have filled the src, tests, configs, data, dockerfiles, reports and models folders. We did not see any need for notebooks, so we deleted that folder. Inside the src folder we split the data script into a `prepare_data.py` and a `data.py`script. Further we did not use the visualize script so we also deleted that one. We the `evaluate.py` script was replace with a `predict.py` script. This was done because our training script also evaluates the model (through the pytorch-lightning Trainer module). In the tests folder we filled in pytests for the model and data, but we decided not to further this with api tests as time constraints called for other priorities.
+From the [MLOps template](https://github.com/SkafteNicki/mlops_template) we have filled the src, tests, configs, data, dockerfiles, reports and models folders. We did not see any need for notebooks, so we deleted that folder. Inside the src folder we split the data script into a `prepare_data.py` and a `data.py`script. Further we did not use the visualize script so we also deleted that one. We the `evaluate.py` script was replace with a `predict.py` script. This was done because our training script also evaluates the model (through the pytorch-lightning Trainer module). In the tests folder we filled in pytests for the model, data and api.
 
 
 ### Question 6
@@ -241,23 +241,28 @@ The importance of these tools became evident in our daily workflow - code review
 >
 > Answer:
 
-In total, we have implemented tests in test_data.py and tests in test_model.py, for a total of 19 tests. The tests primarily focus on two critical components:
+In our continuous effort to ensure the reliability of our machine learning pipeline, we have expanded our testing suite. Currently, there are a total of 22 tests implemented across three primary test files:
 
 1. Data Pipeline Testing (`test_data.py`):
-- Dataset initialization and validation
-- Data loading and transformations
-- Error handling for corrupted/missing data
-- DataModule functionality including batch processing
-- Image transformations and preprocessing
+   - Dataset initialization and validation
+   - Data loading and transformations
+   - Error handling for corrupted/missing data
+   - DataModule functionality, including batch processing
+   - Image transformations and preprocessing
 
 2. Model Testing (`test_model.py`):
-- Model initialization
-- Forward pass functionality
-- Training and validation steps
-- Optimizer and scheduler configuration
-- Output shape verification across different batch sizes
+   - Model initialization
+   - Forward pass functionality
+   - Training and validation steps
+   - Optimizer and scheduler configuration
+   - Output shape verification across different batch sizes
 
-These tests ensure robust data handling and model behavior, which are crucial for the reliability of our machine learning pipeline. The data pipeline testing is particularly important as data issues are often the source of training problems.
+3. API Endpoint Testing (`test_api.py`):
+   - Root endpoint accessibility
+   - Predictions for valid and invalid image inputs
+   - Error handling and message validation
+
+These tests are critical for ensuring robust data handling and model behavior, which are vital for the reliability of our machine learning pipeline. Particularly, the data pipeline testing helps identify data issues that are often sources of training problems.
 
 ### Question 8
 
