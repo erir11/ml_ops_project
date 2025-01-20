@@ -2,33 +2,27 @@ import logging
 import os
 from pathlib import Path
 from typing import Dict, List, Optional, Union
+
 import torch
 import torchvision.transforms as T
 from PIL import Image
+
 from ml_ops_project.model import CarDamageModel
+
 
 class DamagePrediction:
     """Class for making car damage predictions using a trained model."""
-    
-    DAMAGE_CLASSES = {
-        0: "Crack",
-        1: "Scratch",
-        2: "Flat tire",
-        3: "Dent",
-        4: "Glass shatter",
-        5: "Lamp broken"
-    }
-    
+
+    DAMAGE_CLASSES = {0: "Crack", 1: "Scratch", 2: "Flat tire", 3: "Dent", 4: "Glass shatter", 5: "Lamp broken"}
+
     def __init__(self, model_path: Optional[str] = None):
         """Initialize the prediction model.
-        
+
         Args:
             model_path: Path to the model checkpoint. If None, use default or no model.
         """
         self.device = torch.device(
-            "cuda" if torch.cuda.is_available() else 
-            "mps" if torch.backends.mps.is_available() else 
-            "cpu"
+            "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
         )
         self.model_path = model_path or os.getenv("DAMAGE_MODEL_PATH")
         self.model = self._load_model() if self.model_path else None
@@ -51,11 +45,9 @@ class DamagePrediction:
 
     def _get_transforms(self) -> T.Compose:
         """Get image preprocessing transforms."""
-        return T.Compose([
-            T.Resize((256, 256)),
-            T.ToTensor(),
-            T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        ])
+        return T.Compose(
+            [T.Resize((256, 256)), T.ToTensor(), T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])]
+        )
 
     def _validate_image(self, image: Image.Image) -> None:
         """Validate the input image."""
@@ -72,7 +64,7 @@ class DamagePrediction:
 
     def predict_single(self, image_input: Union[str, Path, Image.Image]) -> Dict:
         """Make prediction for a single image.
-        
+
         Args:
             image_input: Path to the image file or a PIL Image object.
         Returns:
@@ -112,14 +104,14 @@ class DamagePrediction:
                     "class_name": self.DAMAGE_CLASSES[predicted_class],
                     "confidence": round(confidence * 100, 2),
                 },
-                "model_version": os.path.basename(self.model_path) if self.model_path else "no_model"
+                "model_version": os.path.basename(self.model_path) if self.model_path else "no_model",
             }
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
     def predict_batch(self, image_inputs: List[Union[str, Path, Image.Image]]) -> List[Dict]:
         """Make predictions for a batch of images.
-        
+
         Args:
             image_inputs: List of paths to image files or PIL Image objects.
         Returns:
@@ -127,26 +119,30 @@ class DamagePrediction:
         """
         return [self.predict_single(image_input) for image_input in image_inputs]
 
+
 def main():
     """Example usage of the prediction class."""
     import argparse
+
     parser = argparse.ArgumentParser(description="Predict car damage from images")
     parser.add_argument("image_paths", nargs="+", help="Path(s) to image file(s)")
     parser.add_argument("--model_path", help="Path to model checkpoint", default=None)
     args = parser.parse_args()
-    
+
     # Initialize predictor
     predictor = DamagePrediction(model_path=args.model_path)
-    
+
     # Make predictions
     if len(args.image_paths) == 1:
         result = predictor.predict_single(args.image_paths[0])
     else:
         result = predictor.predict_batch(args.image_paths)
-    
+
     # Print results
     import json
+
     print(json.dumps(result, indent=2))
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
