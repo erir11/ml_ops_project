@@ -2,4 +2,3 @@
     remote = myremote
 ['remote "gcsremote"']
     url = gs://dvc57bucket
-
