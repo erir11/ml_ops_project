@@ -1,36 +1,39 @@
-# Base image - using python slim image which has ARM support
+# Base image
 FROM python:3.11-slim
 
-# Install system dependencies
+# Create non-root user
+RUN useradd -m appuser
+
+# Install system dependencies and setup directories in single layer
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
     build-essential \
-    gcc \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
+    gcc && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /app/data/processed/train && \
+    chown -R appuser:appuser /app
 
 # Set working directory
 WORKDIR /app
 
 # Copy project files
-COPY src src/
-COPY requirements.txt requirements.txt
-COPY requirements_dev.txt requirements_dev.txt
-COPY README.md README.md
-COPY pyproject.toml pyproject.toml
-COPY configs configs/
-COPY models models/
+COPY --chown=appuser:appuser src src/
+COPY --chown=appuser:appuser requirements.txt requirements.txt
+COPY --chown=appuser:appuser pyproject.toml pyproject.toml
+COPY --chown=appuser:appuser models models/
 
-# Create data directory structure
-RUN mkdir -p /app/data/processed/train
+# Switch to non-root user
+USER appuser
 
-# Install dependencies and project package with verbose output
-RUN pip install -r requirements.txt --no-cache-dir -v && \
-    pip install -e . --no-deps --no-cache-dir -v
+# Install dependencies
+RUN pip install --no-cache-dir -v -r requirements.txt && \
+    pip install --no-cache-dir -v -e . --no-deps
 
-# Set environment variables for non-sensitive data
+# Set environment variables
 ENV PYTHONPATH=/app
 
-# Default command to run api
+ENV PORT=8080
+
+# Default command
 ENTRYPOINT ["python", "-u", "src/ml_ops_project/api.py", "--model_path", "models/model.ckpt"]

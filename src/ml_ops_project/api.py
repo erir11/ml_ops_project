@@ -1,4 +1,4 @@
-import argparse  # Add this import
+import argparse
 import logging
 import os
 import tempfile
@@ -106,7 +106,7 @@ def main():
     args = parser.parse_args()
 
     app = create_app(model_path=args.model_path)
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8080)
 
 
 if __name__ == "__main__":
