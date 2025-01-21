@@ -512,7 +512,8 @@ Cloud Storage (Bucket): Provides object storage where we kept our datasets. It a
 > **You can take inspiration from [this figure](figures/bucket.png).**
 >
 > Answer:
-
+figures/bucket1.png
+figures/bucket2.png
 --- question 19 fill here ---
 
 ### Question 20
