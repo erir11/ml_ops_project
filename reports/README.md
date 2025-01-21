@@ -478,6 +478,10 @@ We saved all outputs, including logs and checkpoints, in an 'outputs' folder. Th
 > *We used the following two services: Engine and Bucket. Engine is used for... and Bucket is used for...*
 >
 > Answer:
+We used engine and bucket.
+Bucket: Provides object storage where we kept our datasets. It allowed for scalable, durable storage of files and integrates easily with version control tools like DVC.
+
+Engine: Offers virtual machines running in Googles data centers. We used it to run our workloads, train models, and handle compute-intensive tasks in a customizable environment.
 
 --- question 17 fill here ---
 
