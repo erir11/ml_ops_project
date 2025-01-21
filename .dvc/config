@@ -1,4 +1,6 @@
 [core]
-    remote = gcsremote
+    remote = myremote
 ['remote "gcsremote"']
+    url = gs://dvc57bucket
+['remote "myremote"']
     url = gs://dvc57bucket
