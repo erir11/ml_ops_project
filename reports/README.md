@@ -478,12 +478,17 @@ We saved all outputs, including logs and checkpoints, in an 'outputs' folder. Th
 > *We used the following two services: Engine and Bucket. Engine is used for... and Bucket is used for...*
 >
 > Answer:
-We used engine and bucket.
-Bucket: Provides object storage where we kept our datasets. It allowed for scalable, durable storage of files and integrates easily with version control tools like DVC.
 
-Engine: Offers virtual machines running in Googles data centers. We used it to run our workloads, train models, and handle compute-intensive tasks in a customizable environment.
+We used the following GCP services:
 
---- question 17 fill here ---
+Artifact Registry: Stores and manages our Docker container images for both training and API deployment. It provides secure, private storage for our containers with built-in vulnerability scanning.
+
+Cloud Run: Hosts our FastAPI application for model inference. It provides serverless deployment of containers, automatically scaling based on demand and only charging for actual usage.
+
+Secret Manager: Securely stores sensitive information like our W&B API key. It provides centralized management of secrets with version control and fine-grained access control.
+Vertex AI: Manages our model training jobs with custom containers. It provides a managed environment for ML training with features like job monitoring, logging, and resource management.
+
+Cloud Storage (Bucket): Provides object storage where we kept our datasets. It allowed for scalable, durable storage of files and integrates easily with version control tools like DVC.
 
 ### Question 18
 
