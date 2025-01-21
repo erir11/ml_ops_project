@@ -85,7 +85,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [x] Create a FastAPI application that can do inference using your model (M22)
-* [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
+* [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
 * [x] Write API tests for your application and setup continues integration for these (M24)
 * [ ] Load test your application (M24)
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
@@ -486,6 +486,7 @@ Artifact Registry: Stores and manages our Docker container images for both train
 Cloud Run: Hosts our FastAPI application for model inference. It provides serverless deployment of containers, automatically scaling based on demand and only charging for actual usage.
 
 Secret Manager: Securely stores sensitive information like our W&B API key. It provides centralized management of secrets with version control and fine-grained access control.
+
 Vertex AI: Manages our model training jobs with custom containers. It provides a managed environment for ML training with features like job monitoring, logging, and resource management.
 
 Cloud Storage (Bucket): Provides object storage where we kept our datasets. It allowed for scalable, durable storage of files and integrates easily with version control tools like DVC.
