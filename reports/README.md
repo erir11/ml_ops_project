@@ -695,7 +695,7 @@ A significant portion of our time went into configuring and troubleshooting Goog
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket. 
+Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket.
 
 *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 --- question 31 fill here ---
