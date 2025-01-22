@@ -109,7 +109,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
 * [ ] Make sure all group members have an understanding about all parts of the project
-* [ ] Uploaded all your code to GitHub
+* [x] Uploaded all your code to GitHub
 
 ## Group information
 
@@ -675,6 +675,7 @@ figures/bucket2.png
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
 >
 > Answer:
+A significant portion of our time went into configuring and troubleshooting Google Cloud Storage. We ran into unexpected authentication issues, project ID mismatches, and billing setup challenges. An additional bug in Git Bash on Windows complicated our uploads, leading us to try different environments. Our initial workaround was to switch to a non-Windows machine entirely, which confirmed the problem lay in the local device rather than our GCP setup. Ultimately, using another terminal (instead of Git Bash) on Windows proved enough to resolve the uploads and authentication errors. Despite the detour, these efforts improved our understanding of GCP project billing, IAM permissions, and DVC’s remote configurations.
 
 --- question 30 fill here ---
 
