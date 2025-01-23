@@ -3,7 +3,6 @@
 This is the report template for the exam. Please only remove the text formatted as with three dashes in front and behind
 like:
 
-```--- question 1 fill here ---```
 
 Where you instead should add your answers. Any other changes may have unwanted consequences when your report is
 auto-generated at the end of the course. For questions where you are asked to include images, start by adding the image
@@ -130,7 +129,7 @@ will check the repositories and the code to verify your answers.
 > Answer:
 s233347, s194633, s233249, s232531
 
---- question 2 fill here ---
+
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -146,7 +145,7 @@ s233347, s194633, s233249, s232531
 
 > Torch metrics was used to get the F1 score, which captures both precision and recall in a single measure, making it especially useful for imbalanced datasets.
 
---- question 3 fill here ---
+
 
 ## Coding environment
 
@@ -308,7 +307,7 @@ Even if we achieved 100% code coverage, we would not consider the code completel
 >
 > Answer:
 
---- question 9 fill here ---
+We tried to keep the state of our main branch in a way that our main functionalities can always be run as-is. Therefore, for larger features that required more than a few lines of code or the addition of new files, we created feature branches. We used pull requests to review and merge them just to get used to them, but most of us defaulted to just merging them ourselves when we reached a running state. This was generally no problem as most of our tasks were small, contained and independent. The only file that regularly led to merge conflicts was actually this README file.
 
 ### Question 10
 
@@ -322,8 +321,8 @@ Even if we achieved 100% code coverage, we would not consider the code completel
 > *pipeline*
 >
 > Answer:
+We used DVC for managing data in our project. It allowed us to keep large datasets out of Git while still maintaining detailed versioning, which kept our repository lightweight and straightforward. Whenever we switched branches or rolled back to an earlier commit, DVC let us retrieve the exact data version tied to that code state. This was especially helpful when working on multiple features in parallel, as each team member could verify they had the correct data for their specific branch. Overall, DVC made our workflow more reliable, reproducible, and easier to manage across different environments, which helped a lot.
 
---- question 10 fill here ---
 
 ### Question 11
 
@@ -514,7 +513,7 @@ Cloud Storage (Bucket): Provides object storage where we kept our datasets. It a
 > Answer:
 figures/bucket1.png
 figures/bucket2.png
---- question 19 fill here ---
+
 
 ### Question 20
 
@@ -564,7 +563,14 @@ figures/bucket2.png
 >
 > Answer:
 
---- question 23 fill here ---
+Yes, we successfully wrote an API for our model using FastAPI, a modern web framework known for its speed and simplicity. The API is designed to handle both single and batch image predictions for car damage detection.
+The process began with creating a DamageDetectionAPI class, where the model is loaded during initialization using a custom DamagePrediction class. Routes are registered for the API:
+A GET endpoint (/) for health checks, returning the model version and supported damage classes.
+A POST endpoint (/predict) for single image predictions, where uploaded image files are validated, saved temporarily, and passed to the model for prediction.
+Another POST endpoint (/predict/batch) for batch processing of multiple images.
+Key considerations included input validation (to ensure uploaded files are images), handling temporary file storage using Python's tempfile module, and robust error handling to manage invalid inputs or model prediction failures gracefully. Additionally, logging was integrated to aid debugging and monitoring.
+To run the API, we implemented a CLI using argparse to allow users to specify a custom model path. The app is launched with Uvicorn, making it lightweight and production-ready. This approach ensures scalability and ease of deployment.
+
 
 ### Question 24
 
@@ -595,7 +601,11 @@ figures/bucket2.png
 >
 > Answer:
 
---- question 25 fill here ---
+--- question 25 fill here —
+For unit testing, we used pytest in combination with FastAPI's TestClient to verify the correctness of our API endpoints. We wrote comprehensive tests to cover various scenarios, including health check requests, predictions with valid and invalid image inputs, batch predictions, and error handling. We used a fixture to generate test images dynamically, ensuring consistent input for each test. The tests validated status codes, response structures, and error messages to ensure robustness and reliability.
+For load testing, we would use a tool like Locust or Apache JMeter to simulate concurrent requests to the API. For example, we could configure Locust to send multiple simultaneous POST requests with test images to the /predict endpoint, gradually increasing the load until the service's performance starts to degrade. The results would measure key metrics such as requests per second, response time, and error rates under heavy traffic.
+In our case, unit tests confirmed that the API handles edge cases effectively. While load testing was not performed, we would expect it to reveal areas for optimization, such as improving concurrency handling or optimizing the model prediction pipeline for high throughput.
+
 
 ### Question 26
 
@@ -677,7 +687,7 @@ figures/bucket2.png
 > Answer:
 A significant portion of our time went into configuring and troubleshooting Google Cloud Storage. We ran into unexpected authentication issues, project ID mismatches, and billing setup challenges. An additional bug in Git Bash on Windows complicated our uploads, leading us to try different environments. Our initial workaround was to switch to a non-Windows machine entirely, which confirmed the problem lay in the local device rather than our GCP setup. Ultimately, using another terminal (instead of Git Bash) on Windows proved enough to resolve the uploads and authentication errors. Despite the detour, these efforts improved our understanding of GCP project billing, IAM permissions, and DVC’s remote configurations.
 
---- question 30 fill here ---
+
 
 ### Question 31
 
@@ -697,5 +707,8 @@ A significant portion of our time went into configuring and troubleshooting Goog
 
 Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket. 
 
+Student s233249 was in charge of setting up the dockerized application and the API.
+
 *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
---- question 31 fill here ---
+
+
