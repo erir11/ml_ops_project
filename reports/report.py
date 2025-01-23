@@ -97,7 +97,6 @@ def html() -> None:
 @app.command()
 def check() -> None:
     """Check if report satisfies the requirements."""
-    
 
     p = Path("README.md")
     with p.open(mode="r", encoding="utf-8") as file:
