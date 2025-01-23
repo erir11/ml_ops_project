@@ -63,7 +63,7 @@ will check the repositories and the code to verify your answers.
 * [x] Build the docker files locally and make sure they work as intended (M10)
 * [x] Write one or multiple configurations files for your experiments (M11)
 * [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
-* [ ] Use profiling to optimize your code (M12)
+* [x] Use profiling to optimize your code (M12)
 * [x] Use logging to log important events in your code (M14)
 * [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 * [ ] Consider running a hyperparameter optimization sweep (M14)
@@ -141,7 +141,7 @@ s233347, s194633, s233249, s232531
 > *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
 >
-> Answer:
+> Answer: 
 
 We used the Albumentations library in our project to perform data augmentation on images. By using functionalities such as RandomResizedCrop, HorizontalFlip, GaussNoise, GaussianBlur, and OpticalDistortion, we generated a wide variety of transformations to enhance model robustness. These operations helped us randomly crop images, flip them horizontally, introduce noise, and even distort them with grid-based or optical manipulations. Compared to PyTorch’s own torchvision data augmentation functions, Albumentation offers significant performance improvements which makes it an easy choice for us.
 
@@ -463,7 +463,9 @@ Our api container does a similar setup and then runs our api script to provide A
 >
 > Answer:
 
---- question 16 fill here ---
+Each group member used the debugging approaches they were experienced and comfortable with, i.e. whatever their IDE of choice provides them with. We did not use pdb apart from playing around with it. Since our main focus was on the MLOPS part and not the coding, we kept a small code base with few opportunities for coding errors to arise.
+
+We did some runs with cProfile as well as the pyTorch profiler, but since our program is very simple and short and already well-optimized through the frameworks we use, we could not identify any easy optimizations. That is not to say that it is perfect, just that it would need deeper knowledge or tailoring towards specific hardware to optimize it further.
 
 ## Working in the cloud
 
@@ -513,8 +515,10 @@ Cloud Storage (Bucket): Provides object storage where we kept our datasets. It a
 > **You can take inspiration from [this figure](figures/bucket.png).**
 >
 > Answer:
-figures/bucket.png
-figures/bucket1.png
+```markdown
+![my_image](figures/bucket.png)
+![my_image2](figures/bucket1.png)
+```
 
 
 ### Question 20
@@ -737,10 +741,12 @@ A significant portion of our time went into configuring and troubleshooting Goog
 
 Student s194633 was in charge of the model implementation and the integration of our chosen frameworks.
 
-Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket.
+Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket. 
 
 Student s233249 was in charge of setting up the dockerized application and the API.
 
 Student s232531 was in charge of reproducibility, GitHub operations and the final report.
 
 *We have used ChatGPT to help debug our code, write configuration files and format some of our comments. Additionally, we used ChatGPT and GitHub Copilot to help write some of our code.*
+
+
