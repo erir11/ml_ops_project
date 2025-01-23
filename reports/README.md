@@ -141,7 +141,7 @@ s233347, s194633, s233249, s232531
 > *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
 >
-> Answer:
+> Answer: 
 
 We used the Albumentations library in our project to perform data augmentation on images. By using functionalities such as RandomResizedCrop, HorizontalFlip, GaussNoise, GaussianBlur, and OpticalDistortion, we generated a wide variety of transformations to enhance model robustness. These operations helped us randomly crop images, flip them horizontally, introduce noise, and even distort them with grid-based or optical manipulations. Compared to PyTorch’s own torchvision data augmentation functions, Albumentation offers significant performance improvements which makes it an easy choice for us.
 
@@ -711,8 +711,13 @@ Group member s233347 used 0.18 dollars on the final bucket version. This would l
 > *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
+```markdown
+![my_image3](figures/project_architecture_diagram.png)
+```
+The workflow begins with local code and data management, where changes are versioned in Git and large files are kept out of the repository by synchronizing with the Google Cloud Storage (GCS) bucket using DVC. Both training and inference code are then containerized in Docker images, which are pushed to the Artifact Registry for version control and secure storage.
+Vertex AI pulls these images during managed training jobs, offering features like built-in logging and job monitoring. If more flexibility or specific hardware configurations are needed, training can instead run on Compute Engine instances. Once the model is trained, the inference service is packaged into a Docker image and deployed to Cloud Run, which automatically handles scaling and traffic routing.
+Throughout this process, DVC ensures data synchronization by pushing or pulling datasets between local storage and the GCS bucket. Weights & Biases captures metrics and hyperparameters for detailed experiment tracking, while local debugging and testing tools validate code quality. Finally, end users interact with the deployed model through a Cloud Run API for predictions or other functionalities. This setup enables a seamless end-to-end machine learning pipeline, from data versioning and containerized training, through to robust inference at scale.
 
---- question 29 fill here ---
 
 ### Question 30
 
@@ -730,6 +735,7 @@ A significant portion of our time went into configuring and troubleshooting Goog
 We initially tried enabling GPU support within our Docker containers, but ran into persistent compatibility and driver issues as well as the sheer size of the NVIDIA base containers with all of the CUDA runtime in it. Rather than continue troubleshooting these blockers in our containerized environment, we chose to pivot our resources to more critical project tasks.
 
 Our members using Windows devices consistently had issues our MAC and Ubuntu users didn’t. This was especially the case in regards to when scripts had to deal with relative file path, where Windows devices required absolute paths to get to the files.
+
 
 ### Question 31
 
@@ -749,10 +755,12 @@ Our members using Windows devices consistently had issues our MAC and Ubuntu use
 
 Student s194633 was in charge of the model implementation and the integration of our chosen frameworks.
 
-Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket.
+Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket. 
 
 Student s233249 was in charge of setting up the dockerized application and the API.
 
 Student s232531 was in charge of reproducibility, GitHub operations and the final report.
 
 *We have used ChatGPT to help debug our code, write configuration files and format some of our comments. Additionally, we used ChatGPT and GitHub Copilot to help write some of our code.*
+
+
