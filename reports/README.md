@@ -336,8 +336,10 @@ We used DVC for managing data in our project. It allowed us to keep large datase
 >
 > Answer:
 
-Our continuous integration is organized into two main GitHub Actions workflows plus automated dependency management. The first workflow runs pre-commit checks for code quality, using hooks for basic file validation and Ruff for both linting and formatting. It automatically fixes and commits minor issues.
-The second workflow handles unit testing across multiple operating systems (Ubuntu, Windows, and macOS) using a matrix strategy. It implements pip caching to speed up builds and uses coverage.py for test coverage reporting. Dependencies are managed through GitHub's Dependabot, which automatically creates pull requests for updates to both pip packages and GitHub Actions on a monthly schedule.
+Our continuous integration is organized into two main GitHub Actions workflows plus automated dependency management.
+The first workflow runs pre-commit checks for code quality, using hooks for basic file validation and Ruff for both linting and formatting. It automatically fixes and commits minor issues.
+
+The second workflow handles unit testing across multiple operating systems (Ubuntu, Windows, and macOS) using a matrix strategy. We decided on only testing our working python version of 3.11, as having multiple versions would multiply the needed tests and quickly max out our cache space. We use caching to speed up builds by reusing dependencies and it automatically runs coverage.py for test coverage reporting. Dependencies are managed through GitHub's Dependabot, which automatically creates pull requests for updates to both pip packages and GitHub Actions on a monthly schedule.
 
 An example of a triggered workflow can be seen [here](https://github.com/erir11/ml_ops_project/actions/runs/12827966987).
 
