@@ -710,5 +710,3 @@ Student s233347 was in charge of the initial command line interface, subsequentl
 Student s233249 was in charge of setting up the dockerized application and the API.
 
 *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
-
-
