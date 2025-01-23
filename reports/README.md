@@ -141,7 +141,7 @@ s233347, s194633, s233249, s232531
 > *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
 >
-> Answer:
+> Answer: 
 
 We used the Albumentations library in our project to perform data augmentation on images. By using functionalities such as RandomResizedCrop, HorizontalFlip, GaussNoise, GaussianBlur, and OpticalDistortion, we generated a wide variety of transformations to enhance model robustness. These operations helped us randomly crop images, flip them horizontally, introduce noise, and even distort them with grid-based or optical manipulations. Compared to PyTorch’s own torchvision data augmentation functions, Albumentation offers significant performance improvements which makes it an easy choice for us.
 
@@ -337,11 +337,13 @@ We used DVC for managing data in our project. It allowed us to keep large datase
 > Answer:
 
 Our continuous integration is organized into two main GitHub Actions workflows plus automated dependency management.
-The first workflow runs pre-commit checks for code quality, using hooks for basic file validation and Ruff for both linting and formatting. It automatically fixes and commits minor issues.
+The first workflow runs pre-commit checks for code quality, using a hook that triggers on every manual commit for basic file validation and Ruff for both linting and formatting. It automatically fixes and commits minor issues based on the ruff configuration we specified in our pyproject.toml.
 
 The second workflow handles unit testing across multiple operating systems (Ubuntu, Windows, and macOS) using a matrix strategy. We decided on only testing our working python version of 3.11, as having multiple versions would multiply the needed tests and quickly max out our cache space. We use caching to speed up builds by reusing dependencies and it automatically runs coverage.py for test coverage reporting. Dependencies are managed through GitHub's Dependabot, which automatically creates pull requests for updates to both pip packages and GitHub Actions on a monthly schedule.
 
 An example of a triggered workflow can be seen [here](https://github.com/erir11/ml_ops_project/actions/runs/12827966987).
+
+We were not able to get a continuous workflow for data changes or model registry to work as we prioritized other things. We tried to set up a workflow to automatically build our docker images but unfortunately we were not able to make it work.
 
 ## Running code and tracking experiments
 
@@ -507,7 +509,7 @@ Cloud Storage (Bucket): Provides object storage where we kept our datasets. It a
 >
 > Answer:
 
---- question 18 fill here ---
+We did not utilise GCP for VMs.
 
 ### Question 19
 
@@ -554,6 +556,9 @@ Cloud Storage (Bucket): Provides object storage where we kept our datasets. It a
 > Answer:
 
 --- question 22 fill here ---
+We decided not to train our model in the cloud, as the training process on our local machines was rather short, taking about an hour each time. Given the efficiency of our local setup, it didn’t make practical sense to migrate the training to the cloud. Training locally allowed us to maintain control over our resources, avoid potential latency issues, and eliminate the overhead costs associated with cloud computing.
+Our local environment was well-equipped for our model's requirements, providing sufficient computational power to handle the training tasks efficiently. Additionally, the shorter training duration meant that any perceived benefits of using cloud infrastructure, such as scalability and distributed computing, were not significant enough to warrant the transition.
+By opting to train locally, we streamlined our workflow, reduced complexity, and achieved quick iteration cycles. This approach also gave us more time to focus on the deployment process, ensuring a smooth and effective rollout of our model into production.
 
 ## Deployment
 
@@ -672,8 +677,9 @@ In our case, unit tests confirmed that the API handles edge cases effectively. W
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
+Group member s233347 used 0.18 dollars on the final bucket version. This would likely have been higher if the bucket had been implemented correctly the first time. Furthermore, the extend to which DVC was actually used was rather due to our dataset remaining very consistent throughout the project.
 
---- question 27 fill here ---
+
 
 ### Question 28
 
@@ -741,10 +747,12 @@ A significant portion of our time went into configuring and troubleshooting Goog
 
 Student s194633 was in charge of the model implementation and the integration of our chosen frameworks.
 
-Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket.
+Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket. 
 
 Student s233249 was in charge of setting up the dockerized application and the API.
 
 Student s232531 was in charge of reproducibility, GitHub operations and the final report.
 
 *We have used ChatGPT to help debug our code, write configuration files and format some of our comments. Additionally, we used ChatGPT and GitHub Copilot to help write some of our code.*
+
+
