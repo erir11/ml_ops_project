@@ -141,11 +141,11 @@ s233347, s194633, s233249, s232531
 > *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
 >
-> Answer: We used the Albumentations library in our project to perform data augmentation on images. By using functionalities such as RandomResizedCrop, HorizontalFlip, GaussNoise, GaussianBlur, and OpticalDistortion, we generated a wide variety of transformations to enhance model robustness. These operations helped us randomly crop images, flip them horizontally, introduce noise, and even distort them with grid-based or optical manipulations.
+> Answer: 
+
+We used the Albumentations library in our project to perform data augmentation on images. By using functionalities such as RandomResizedCrop, HorizontalFlip, GaussNoise, GaussianBlur, and OpticalDistortion, we generated a wide variety of transformations to enhance model robustness. These operations helped us randomly crop images, flip them horizontally, introduce noise, and even distort them with grid-based or optical manipulations. Compared to PyTorch’s own torchvision data augmentation functions, Albumentation offers significant performance improvements which makes it an easy choice for us.
 
 > Torch metrics was used to get the F1 score, which captures both precision and recall in a single measure, making it especially useful for imbalanced datasets.
-
-
 
 ## Coding environment
 
@@ -196,7 +196,7 @@ This ensures all team members have identical development environments with the s
 >
 > Answer:
 
-From the [MLOps template](https://github.com/SkafteNicki/mlops_template) we have filled the src, tests, configs, data, dockerfiles, reports and models folders. We did not see any need for notebooks, so we deleted that folder. Inside the src folder we split the data script into a `prepare_data.py` and a `data.py`script. Further we did not use the visualize script so we also deleted that one. We the `evaluate.py` script was replace with a `predict.py` script. This was done because our training script also evaluates the model (through the pytorch-lightning Trainer module). In the tests folder we filled in pytests for the model, data and api.
+From the [MLOps template](https://github.com/SkafteNicki/mlops_template) we have filled the src, tests, configs, data, dockerfiles, reports and models folders. We did not see any need for notebooks, so we deleted that folder. Inside the src folder we split the data script into a `prepare_data.py` and a `data.py`script. Further we did not use the visualize script so we also deleted that one. The `evaluate.py` script was replaced with a `predict.py` script. This was done because our training script also evaluates the model (through the pytorch-lightning Trainer module). In the tests folder we filled in pytests for the model, data and api. We also use some dependency configuration folders like .dvc and .github.
 
 
 ### Question 6
@@ -245,8 +245,7 @@ In our continuous effort to ensure the reliability of our machine learning pipel
 1. Data Pipeline Testing (`test_data.py`):
    - Dataset initialization and validation
    - Data loading and transformations
-   - Error handling for corrupted/missing data
-   - DataModule functionality, including batch processing
+   - DataModule functionality
    - Image transformations and preprocessing
 
 2. Model Testing (`test_model.py`):
@@ -254,14 +253,12 @@ In our continuous effort to ensure the reliability of our machine learning pipel
    - Forward pass functionality
    - Training and validation steps
    - Optimizer and scheduler configuration
-   - Output shape verification across different batch sizes
+   - Output shape verification
 
 3. API Endpoint Testing (`test_api.py`):
    - Root endpoint accessibility
-   - Predictions for valid and invalid image inputs
-   - Error handling and message validation
-
-These tests are critical for ensuring robust data handling and model behavior, which are vital for the reliability of our machine learning pipeline. Particularly, the data pipeline testing helps identify data issues that are often sources of training problems.
+   - Predictions for image inputs
+   - Error handling
 
 ### Question 8
 
@@ -364,8 +361,6 @@ An example of a triggered workflow can be seen [here](https://github.com/erir11/
 For configuring and running experiments, we used Hydra and OmegaConf for managing configuration files. These allow easy management of parameters through configuration files, enhancing reproducibility and modularity.
 
 ```python
-import hydra
-from omegaconf import DictConfig
 
 @hydra.main(config_path="configs", config_name="config")
 def main(cfg: DictConfig) -> None:
@@ -377,7 +372,7 @@ if __name__ == "__main__":
     main()
 ```
 
-The configuration file (`config.yaml`) contains all the parameters such as model type, learning rates, and data paths. Here's a snippet from the one we used for training:
+The configuration file (`config.yaml`) contains all relevant parameters. Here's a snippet from ours:
 
 ```yaml
 seed: 42
@@ -395,7 +390,7 @@ logger:
     project: "car-damage-classification"
 ```
 
-Hydra simplifies experiment configuration by automatically overriding the defaults with specified values, enabling seamless experiment management.
+Hydra simplifies experiment configuration by automatically overriding the defaults with specified values.
 
 ### Question 13
 
@@ -446,7 +441,12 @@ We saved all outputs, including logs and checkpoints, in an 'outputs' folder. Th
 >
 > Answer:
 
---- question 15 fill here ---
+We used two docker containers in order to ensure reproducibility and to be able to deploy our model to the cloud:
+
+Our training container provides a light-weight python installation as well as all dependencies needed to train our model on the CPU. We decided against basing it on a CUDA-enabled NVIDIA container for size reasons and because we were not able to make it train with our local NVIDIA GPUs. Finally, it runs our training script and saves the model.
+
+Our api container does a similar setup and then runs our api script to provide API endpoints which facilitate interaction with our model. It can be started like this:
+“docker run -p 8000:8000 -v "$(pwd)/models:/ml_ops_project/models" car-damage-detection”
 
 ### Question 16
 
@@ -511,8 +511,8 @@ Cloud Storage (Bucket): Provides object storage where we kept our datasets. It a
 > **You can take inspiration from [this figure](figures/bucket.png).**
 >
 > Answer:
+figures/bucket.png
 figures/bucket1.png
-figures/bucket2.png
 
 
 ### Question 20
@@ -522,7 +522,8 @@ figures/bucket2.png
 >
 > Answer:
 
---- question 20 fill here ---
+
+
 
 ### Question 21
 
@@ -586,7 +587,34 @@ To run the API, we implemented a CLI using argparse to allow users to specify a 
 >
 > Answer:
 
---- question 24 fill here ---
+--- question 24 fill here —
+
+Yes, we successfully deployed our API in the cloud using **Google Cloud Run**, which provides a fully managed, serverless platform for containerized applications. First, we containerized the application using Docker, writing a custom Dockerfile (`api.dockerfile`) tailored to our API's requirements. The container was built and tagged with Google Artifact Registry as the target repository.
+
+We initialized our Google Cloud environment using `gcloud init`, created a project, and enabled the necessary services such as Artifact Registry and Cloud Run. We created a Docker repository in the `us-central1` region and authenticated Docker with Google Cloud. The Docker image was built using:
+
+```bash
+docker build -f dockerfiles/api.dockerfile -t us-central1-docker.pkg.dev/[PROJECT_ID]/ml-api-repo/damage-detection-api:v1 .
+```
+
+After pushing the image to the Artifact Registry, we deployed the container using:
+
+```bash
+gcloud run deploy damage-detection-api \
+  --image us-central1-docker.pkg.dev/[PROJECT_ID]/ml-api-repo/damage-detection-api:v1 \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated
+```
+
+The service is accessible via a public URL generated by Cloud Run. Users can invoke the service using tools like `curl` or Postman. For example, a single prediction can be triggered with:
+
+```bash
+curl -X POST -F "file=@test.jpg" https://damage-detection-api-nfnrldoglq-uc.a.run.app/predict
+```
+
+This approach ensures scalability and minimal management overhead.
+
 
 ### Question 25
 
@@ -705,8 +733,14 @@ A significant portion of our time went into configuring and troubleshooting Goog
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket.
+Student s194633 was in charge of the model implementation and the integration of our chosen frameworks.
+
+Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket. 
 
 Student s233249 was in charge of setting up the dockerized application and the API.
 
-*We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
+Student s232531 was in charge of reproducibility, GitHub operations and the final report.
+
+*We have used ChatGPT to help debug our code, write configuration files and format some of our comments. Additionally, we used ChatGPT and GitHub Copilot to help write some of our code.*
+
+
