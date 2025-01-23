@@ -1,7 +1,7 @@
 # run following commands to install requirements
 # pip install typer markdown pydantic loguru
 
-#test
+# test
 
 
 import re
