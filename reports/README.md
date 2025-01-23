@@ -141,7 +141,7 @@ s233347, s194633, s233249, s232531
 > *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
 >
-> Answer: 
+> Answer:
 
 We used the Albumentations library in our project to perform data augmentation on images. By using functionalities such as RandomResizedCrop, HorizontalFlip, GaussNoise, GaussianBlur, and OpticalDistortion, we generated a wide variety of transformations to enhance model robustness. These operations helped us randomly crop images, flip them horizontally, introduce noise, and even distort them with grid-based or optical manipulations. Compared to PyTorch’s own torchvision data augmentation functions, Albumentation offers significant performance improvements which makes it an easy choice for us.
 
@@ -749,12 +749,10 @@ Our members using Windows devices consistently had issues our MAC and Ubuntu use
 
 Student s194633 was in charge of the model implementation and the integration of our chosen frameworks.
 
-Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket. 
+Student s233347 was in charge of the initial command line interface, subsequently the DVC and extension by deploying the GCP bucket.
 
 Student s233249 was in charge of setting up the dockerized application and the API.
 
 Student s232531 was in charge of reproducibility, GitHub operations and the final report.
 
 *We have used ChatGPT to help debug our code, write configuration files and format some of our comments. Additionally, we used ChatGPT and GitHub Copilot to help write some of our code.*
-
-
