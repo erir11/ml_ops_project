@@ -576,7 +576,6 @@ We didn't utilize Cloud Build directly in our workflow, we managed our container
 >
 > Answer:
 
---- question 22 fill here ---
 We decided not to train our model in the cloud, as the training process on our local machines was rather short, taking about an hour each time. Given the efficiency of our local setup, it didn’t make practical sense to migrate the training to the cloud. Training locally allowed us to maintain control over our resources, avoid potential latency issues, and eliminate the overhead costs associated with cloud computing.
 Our local environment was well-equipped for our model's requirements, providing sufficient computational power to handle the training tasks efficiently. Additionally, the shorter training duration meant that any perceived benefits of using cloud infrastructure, such as scalability and distributed computing, were not significant enough to warrant the transition.
 By opting to train locally, we streamlined our workflow, reduced complexity, and achieved quick iteration cycles. This approach also gave us more time to focus on the deployment process, ensuring a smooth and effective rollout of our model into production.
@@ -619,7 +618,6 @@ To run the API, we implemented a CLI using argparse to allow users to specify a 
 >
 > Answer:
 
---- question 24 fill here —
 
 Yes, we successfully deployed our API in the cloud using **Google Cloud Run**, which provides a fully managed, serverless platform for containerized applications. First, we containerized the application using Docker, writing a custom Dockerfile (`api.dockerfile`) tailored to our API's requirements. The container was built and tagged with Google Artifact Registry as the target repository.
 
@@ -661,7 +659,6 @@ This approach ensures scalability and minimal management overhead.
 >
 > Answer:
 
---- question 25 fill here —
 For unit testing, we used pytest in combination with FastAPI's TestClient to verify the correctness of our API endpoints. We wrote comprehensive tests to cover various scenarios, including health check requests, predictions with valid and invalid image inputs, batch predictions, and error handling. We used a fixture to generate test images dynamically, ensuring consistent input for each test. The tests validated status codes, response structures, and error messages to ensure robustness and reliability.
 For load testing, we would use a tool like Locust or Apache JMeter to simulate concurrent requests to the API. For example, we could configure Locust to send multiple simultaneous POST requests with test images to the /predict endpoint, gradually increasing the load until the service's performance starts to degrade. The results would measure key metrics such as requests per second, response time, and error rates under heavy traffic.
 In our case, unit tests confirmed that the API handles edge cases effectively. While load testing was not performed, we would expect it to reveal areas for optimization, such as improving concurrency handling or optimizing the model prediction pipeline for high throughput.
@@ -716,7 +713,6 @@ Group member s194633 only used 0.01 dollars, this would probably have been highe
 >
 > Answer:
 
---- question 28 fill here ---
 
 ### Question 29
 
@@ -732,9 +728,9 @@ Group member s194633 only used 0.01 dollars, this would probably have been highe
 > *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
-```markdown
+
 ![my_image3](figures/project_architecture_diagram.png)
-```
+
 The workflow begins with local code and data management, where changes are versioned in Git and large files are kept out of the repository by synchronizing with the Google Cloud Storage (GCS) bucket using DVC. Both training and inference code are then containerized in Docker images, which are pushed to the Artifact Registry for version control and secure storage.
 Vertex AI pulls these images during managed training jobs, offering features like built-in logging and job monitoring. If more flexibility or specific hardware configurations are needed, training can instead run on Compute Engine instances. Once the model is trained, the inference service is packaged into a Docker image and deployed to Cloud Run, which automatically handles scaling and traffic routing.
 Throughout this process, DVC ensures data synchronization by pushing or pulling datasets between local storage and the GCS bucket. Weights & Biases captures metrics and hyperparameters for detailed experiment tracking, while local debugging and testing tools validate code quality. Finally, end users interact with the deployed model through a Cloud Run API for predictions or other functionalities. This setup enables a seamless end-to-end machine learning pipeline, from data versioning and containerized training, through to robust inference at scale.
