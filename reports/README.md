@@ -430,7 +430,23 @@ We saved all outputs, including logs and checkpoints, in an 'outputs' folder. Th
 >
 > Answer:
 
---- question 14 fill here ---
+# Question 14
+
+In developing our car damage classification model, we've been using Weights & Biases (W&B) to keep track of everything - it's been incredibly helpful in understanding how our model is actually performing in real-time.
+
+![Validation F1 Score](figures/wandb1.png)
+
+First up is our validation F1 score tracking. We chose to focus on F1 score because when you're dealing with car damage classification, you really need to care about both precision and recall. Think about it - we can't afford to miss damage (recall) but also can't have false alarms (precision). The macro-averaging we're using ensures we're doing well across all damage types, not just the common ones.
+
+![Validation Loss](figures/wandb2.png)
+
+The validation loss curve has been particularly interesting to watch. What we love about tracking this alongside F1 is that it helps us catch any overfitting issues early on.
+
+![Confusion Matrix](figures/wandb3.png)
+
+Finally, this confusion matrix visualization has been nice to have. It's cool to see how different types of damage get confused with each other.  This kind of insight is gold when we're trying to figure out where to focus our efforts - whether that's collecting more data for certain categories or tweaking our model architecture.
+
+We've set up all of this tracking through PyTorch Lightning's W&B integration, which made the whole process pretty seamless. Looking at all these metrics together has really helped guide our development process - it's like having a dashboard that tells you exactly where your model needs work.
 
 ### Question 15
 
@@ -509,7 +525,7 @@ Cloud Storage (Bucket): Provides object storage where we kept our datasets. It a
 >
 > Answer:
 
-We did not utilise GCP for VMs.
+We used Google Cloud's Compute Engine as our main computing service for attempting to train our machine learning model. We chose a virtual machine from the N1 family and equipped it with a Tesla T4 GPU to give us the processing power needed for training. To ensure our training environment was consistent and reproducible, we set up a custom Docker container with all our necessary tools and dependencies. While we ultimately weren't able to get the training working on this setup due to time constraints, the Compute Engine proved to be a flexible platform that allowed us to experiment with GPU-accelerated computing. This experience with Compute Engine taught us valuable lessons about cloud infrastructure.
 
 ### Question 19
 
@@ -530,6 +546,9 @@ We did not utilise GCP for VMs.
 >
 > Answer:
 
+![im1](figures/artifact1.png)
+![im2](figures/artifact2.png)
+
 
 
 
@@ -540,7 +559,9 @@ We did not utilise GCP for VMs.
 >
 > Answer:
 
---- question 21 fill here ---
+We didn't utilize Cloud Build directly in our workflow, we managed our container images through Google Cloud's Artifact Registry. The screenshot shows our damage-detection-api image versions that were built locally using Docker and pushed to the registry. We chose this direct approach for its simplicity and faster iteration cycle during development. Each version in the registry represents a deployment of our FastAPI application that was subsequently deployed to Cloud Run.
+
+![im2](figures/art3.png)
 
 ### Question 22
 
