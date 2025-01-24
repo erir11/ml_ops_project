@@ -9,10 +9,12 @@ import uvicorn
 from fastapi import FastAPI, File, HTTPException, UploadFile
 
 from ml_ops_project.predict import DamagePrediction
+from prometheus_client import Counter, make_asgi_app
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+error_counter = Counter("prediction_error", "Number of prediction errors")
 
 class DamageDetectionAPI:
     def __init__(self, model_path: str = None):
@@ -37,6 +39,8 @@ class DamageDetectionAPI:
                 "damage_classes": self.predictor.DAMAGE_CLASSES,
             }
 
+        @self.app.get("/metrics", make_asgi_app())
+
         @self.app.post("/predict")
         async def predict_damage(file: UploadFile = File(...)):
             if not file.content_type.startswith("image/"):
@@ -59,6 +63,7 @@ class DamageDetectionAPI:
                 raise http_exc
             except Exception as e:
                 logger.error(f"Prediction failed: {str(e)}")
+                error_counter.inc()
                 raise HTTPException(status_code=500, detail=f"An error occurred during prediction: {str(e)}")
 
         @self.app.post("/predict/batch")

@@ -53,3 +53,6 @@ numpy==1.26.0      # Numerical operations
 joblib==1.4.2      # Model loading/saving
 wandb==0.19.2
 python-multipart==0.0.20
+
+
+prometheus_client==0.20.0
