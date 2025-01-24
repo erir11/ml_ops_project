@@ -677,7 +677,7 @@ In our case, unit tests confirmed that the API handles edge cases effectively. W
 >
 > Answer:
 
---- question 26 fill here ---
+We implemented basic monitoring that uses a Counter() object to keep trck of the number of errors that occurred. Based on this, other metrics could easily be added when needed. Since we do not have a working cloud deployment we could not try it there but it would be essential to keep track of the app's telemetry including load, errors and prediction statistics. This can facilitate the continuous operation of the app and help us find bottlenecks and model issues like data drift as well as performance issues before they become too severe. Finally, we would also have set up alert systems if we had more time to get notified when certain thresholds are reached.
 
 ## Overall discussion of project
 
