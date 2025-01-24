@@ -677,7 +677,7 @@ In our case, unit tests confirmed that the API handles edge cases effectively. W
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
-Group member s233347 used 0.18 dollars on the final bucket version. This would likely have been higher if the bucket had been implemented correctly the first time. Furthermore, the extend to which DVC was actually used was rather due to our dataset remaining very consistent throughout the project.
+Group member s233347 used 0.18 dollars on the final bucket version. This would likely have been higher if the bucket had been implemented correctly the first time. Furthermore, the extend to which DVC was actually used was rather low due to our dataset remaining very consistent throughout the project.
 
 
 
